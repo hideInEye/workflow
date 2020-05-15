@@ -9,9 +9,9 @@
       <el-checkbox v-for="item in data" :label="item" :key="item.record_id">{{item.user_name}}</el-checkbox>
     </el-checkbox-group>
     <span slot="footer" class="dialog-footer">
-    <el-button @click="handlerClose">取 消</el-button>
-    <el-button type="primary" @click="handlerClose">确 定</el-button>
-  </span>
+      <el-button @click="handlerClose">取 消</el-button>
+      <el-button type="primary" @click="handlerClose">确 定</el-button>
+    </span>
   </el-dialog>
 </template>
 

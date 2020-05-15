@@ -104,12 +104,13 @@ export default {
         } else {
           this.graph.updateItem(item, { [key]: value })
         }
-        this.selectedModel = { ...item.getModel() }
+        this.selectedModel = { ...item.getModel(), item, graph: this.graph }
       } else {
         const canvasModel = { ...this.processModel, [key]: value }
         this.selectedModel = canvasModel
         this.processModel = canvasModel
       }
+      console.log(this.selectedModel)
     }
   },
   destroyed () {
@@ -146,6 +147,7 @@ export default {
     this.graph.data(this.initShape(this.data))
     this.graph.render()
     this.initEvents()
+    this.$store.commit('workflow/editor/setGraph', this.graph)
   }
 }
 </script>
