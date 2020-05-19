@@ -52,6 +52,7 @@ util.getShapeName = function (clazz) {
     case 'signalCatch': return 'signal-catch-node'
     case 'draft': return 'draft-node'
     case 'autoBranch': return 'auto-branch-node'
+    case 'freeNode': return 'free-task-node'
     default: return 'task-node'
   }
 }

@@ -40,14 +40,22 @@ export default {
       default: () => (
         {
           nodes: [
-            { id: 'startNode1', x: 50, y: 200, label: '开始', clazz: 'start' },
+            { id: 'startNode1', x: 108, y: 200, label: '开始', clazz: 'start' },
             { id: 'draftNode1', x: 250, y: 200, label: '起草节点', clazz: 'draft' },
-            { id: 'endNode1', x: 550, y: 200, label: '结束', clazz: 'end' },
-            { id: 'endNode2', x: 550, y: 400, label: '', clazz: 'autoBranch' }
+            { id: 'endNode1', x: 864, y: 281, label: '结束', clazz: 'end' },
+            { id: 'userTask1589526576114', x: 540, y: 280, label: '财务审批', clazz: 'userTask' },
+            { id: 'userTask1589526586346', x: 540, y: 405, label: '财务审批', clazz: 'userTask' },
+            { id: 'userTask1589526593182', x: 697, y: 303, label: '总经理审批', clazz: 'userTask' },
+            { id: 'autoBranch1', x: 350, y: 280, label: '条件节点', clazz: 'autoBranch' }
           ],
           edges: [
             { source: 'startNode1', target: 'draftNode1', sourceAnchor: 1, targetAnchor: 3, clazz: 'flow' },
-            { source: 'draftNode1', target: 'endNode1', sourceAnchor: 1, targetAnchor: 2, clazz: 'flow' }
+            { source: 'draftNode1', target: 'autoBranch1', sourceAnchor: 1, targetAnchor: 3, clazz: 'flow' },
+            { clazz: 'flow', source: 'userTask1589526576114', target: 'userTask1589526593182', sourceAnchor: 1, targetAnchor: 3 },
+            { clazz: 'flow', source: 'userTask1589526593182', target: 'endNode1', sourceAnchor: 1, targetAnchor: 2 },
+            { clazz: 'flow', source: 'autoBranch1', target: 'userTask1589526576114', sourceAnchor: 1, targetAnchor: 3 },
+            { clazz: 'flow', source: 'autoBranch1', target: 'userTask1589526586346', sourceAnchor: 2, targetAnchor: 3 },
+            { clazz: 'flow', source: 'userTask1589526586346', target: 'endNode1', sourceAnchor: 1, targetAnchor: 1 }
           ]
         }
       )

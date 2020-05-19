@@ -14,15 +14,19 @@
 <script>
 import DataTable from '@/components/data-table/index'
 import ImportUser from './ImportUser'
-
+import { create, queryPage } from '@/api/biz.system'
+import PageHelper from '../../../libs/pageHelper'
 export default {
   components: { ImportUser, DataTable },
   methods: {
     handleDelete ({ index, row }, done) {
       done()
     },
-    handleAdd (row, resolve) {
-      console.log(row)
+    async handleAdd (row, resolve) {
+      const res = await create(row)
+      if (res.record_id) {
+        this.$message.success('添加成功')
+      }
       resolve()
     },
     handleUpdate (row, resolve) {
@@ -51,7 +55,7 @@ export default {
           },
           {
             title: '用户接口',
-            name: 'get_user_api',
+            name: 'user_info_api',
             formItem: {
               rules: [{ required: true, message: '请输入接口地址' }]
             },
@@ -72,11 +76,6 @@ export default {
           }
         ],
         data: [
-          {
-            name: '信息化系统',
-            get_user_api: 'http://baidu.com',
-            memo: '备注信息没有吧'
-          }
         ],
         actionCol: {
           custom: [
@@ -99,8 +98,13 @@ export default {
         importUser: ({ index, row }) => {
           this.dialogVisible = true
         }
-      }
+      },
+      pageData: PageHelper.create()
     }
+  },
+  async mounted () {
+    const res = await queryPage({ pageData: this.pageData})
+    console.log(res)
   }
 }
 </script>

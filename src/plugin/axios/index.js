@@ -2,7 +2,9 @@ import store from '@/store'
 import axios from 'axios'
 import { Message } from 'element-ui'
 import util from '@/libs/util'
-
+import PageInfo from '@/libs/pageHelper/PageInfo'
+import config from '../../setting'
+import { stringify } from 'qs'
 // 创建一个错误
 function errorCreate (msg) {
   const error = new Error(msg)
@@ -42,6 +44,7 @@ const service = axios.create({
 // 请求拦截器
 service.interceptors.request.use(
   config => {
+    console.log(config)
     // 在请求发送之前做一些处理
     const token = util.cookies.get('token')
     // 让每个请求携带token-- ['X-Token']为自定义key 请根据实际情况自行修改
@@ -105,4 +108,44 @@ service.interceptors.response.use(
   }
 )
 
-export default service
+/**
+ * 封装异步请求，支持分页格式化
+ * @param payload 相关配置
+ */
+const asyncRequest = payload => {
+  if (!payload || !payload.url) {
+    throw new Error('没有设置请求url')
+  }
+  const { url, pageInfo, ...other } = payload
+  if (pageInfo && pageInfo instanceof PageInfo) {
+    const { pageNum, pageSize, filters, sorts } = pageInfo
+    let data = { pageNum, pageSize, filters, sorts }
+
+    if (config.pageHelper.requestFormat) {
+      data = config.pageHelper.requestFormat(pageInfo)
+    }
+    other.data = data
+  }
+  let promise
+  if (other.method === 'GET') {
+    promise = service(`${url}?${stringify(other.data)}`)
+  } else {
+    promise = service(url, {
+      method: other.method,
+      body: other.data
+    })
+  }
+
+  // 如果是分页查询（格式化返回结果）
+  if (pageInfo && pageInfo instanceof PageInfo) {
+    return promise.then(resp => {
+      if (config.pageHelper.responseFormat) {
+        const newPageInfo = config.pageHelper.responseFormat(resp)
+        return Object.assign(new PageInfo(), pageInfo, newPageInfo)
+      }
+    })
+  } else {
+    return promise
+  }
+}
+export default asyncRequest

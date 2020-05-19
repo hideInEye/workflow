@@ -400,6 +400,7 @@ export default function (G6) {
       }
     })
   }, 'task-node')
+
   G6.registerNode('script-task-node', {
     options: deepMix({}, taskDefaultOptions, {
       icon: require('../../../assets/icons/flow/icon_script.svg'),
@@ -443,7 +444,7 @@ export default function (G6) {
       }
     })
   }, 'task-node')
-  G6.registerNode('mail-task-node', {
+  G6.registerNode('free-task-node', {
     options: deepMix({}, taskDefaultOptions, {
       icon: require('../../../assets/icons/flow/icon_mail.svg'),
       style: {

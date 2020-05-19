@@ -21,16 +21,6 @@ const frameIn = [
         },
         component: _import('system/index')
       },
-      // 演示页面
-      {
-        path: 'page1',
-        name: 'page1',
-        meta: {
-          title: '页面 1',
-          auth: true
-        },
-        component: _import('demo/page1')
-      },
       {
         path: 'biz/system',
         name: 'biz-system',

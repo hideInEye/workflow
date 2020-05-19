@@ -69,5 +69,33 @@ export default {
   // 是否默认开启页面切换动画
   transition: {
     active: true
+  },
+  // 分页助手
+  pageHelper: {
+    // 格式化要发送到后端的数据
+    requestFormat: pageInfo => {
+      const { pageNum, pageSize, filters } = pageInfo
+      return {
+        current: pageNum,
+        pageSize,
+        q: 'page',
+        ...filters
+      }
+    },
+
+    // 格式化从后端反回的数据
+    responseFormat: resp => {
+      const {
+        list,
+        pagination: { total, current, pageSize }
+      } = resp
+      return {
+        pageNum: current,
+        pageSize,
+        total,
+        totalPages: total,
+        list
+      }
+    }
   }
 }

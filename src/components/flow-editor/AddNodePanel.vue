@@ -11,6 +11,9 @@
         <img :data-item="userTaskData" alt="审批节点"
              :src="require('../../assets/flow/user-task.svg')" style="width:80px;height:44px" />
         <div>审批节点</div>
+        <img data-item="{clazz:'freeNode',size:'80*44',label:'自由节点'}" alt="自由节点"
+             :src="require('../../assets/flow/mail-task.svg')" style="width:80px;height:44px" />
+        <div>自由节点</div>
         <img data-item="{clazz:'autoBranch',size:'40*40',label:'条件分支'}"
              :src="require('../../assets/flow/parallel-gateway.svg')" style="width:48px;height:48px" />
         <div>条件分支</div>

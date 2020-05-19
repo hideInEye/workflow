@@ -34,8 +34,8 @@ export const menuAside = supplementPath([
     title: '系统管理',
     icon: 'flask',
     children: [
-      { path: '/page1', title: '页面 1' },
-      { path: '/biz', title: '业务系统管理' }
+      // { path: '/page1', title: '页面 1' },
+      // { path: '/biz', title: '业务系统管理' }
     ]
   },
   {
