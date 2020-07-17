@@ -74,9 +74,9 @@ export default {
   pageHelper: {
     // 格式化要发送到后端的数据
     requestFormat: pageInfo => {
-      const { pageNum, pageSize, filters } = pageInfo
+      const { currentPage, pageSize, filters } = pageInfo
       return {
-        current: pageNum,
+        current: currentPage,
         pageSize,
         q: 'page',
         ...filters

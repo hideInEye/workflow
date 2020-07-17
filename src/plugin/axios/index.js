@@ -44,7 +44,6 @@ const service = axios.create({
 // 请求拦截器
 service.interceptors.request.use(
   config => {
-    console.log(config)
     // 在请求发送之前做一些处理
     const token = util.cookies.get('token')
     // 让每个请求携带token-- ['X-Token']为自定义key 请根据实际情况自行修改
@@ -118,8 +117,8 @@ const asyncRequest = payload => {
   }
   const { url, pageInfo, ...other } = payload
   if (pageInfo && pageInfo instanceof PageInfo) {
-    const { pageNum, pageSize, filters, sorts } = pageInfo
-    let data = { pageNum, pageSize, filters, sorts }
+    const { currentPage, pageSize, filters, sorts } = pageInfo
+    let data = { currentPage, pageSize, filters, sorts }
 
     if (config.pageHelper.requestFormat) {
       data = config.pageHelper.requestFormat(pageInfo)
@@ -132,7 +131,7 @@ const asyncRequest = payload => {
   } else {
     promise = service(url, {
       method: other.method,
-      body: other.data
+      data: other.data
     })
   }
 

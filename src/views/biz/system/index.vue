@@ -1,6 +1,7 @@
 <template>
   <d2-container>
     <data-table
+      :data="data"
       :options="tableProps"
       @onDelete="handleDelete"
       @onAdd="handleAdd"
@@ -14,12 +15,17 @@
 <script>
 import DataTable from '@/components/data-table/index'
 import ImportUser from './ImportUser'
-import { create, queryPage } from '@/api/biz.system'
+import { create, queryPage, update } from '../../../api/biz.system'
 import PageHelper from '../../../libs/pageHelper'
 export default {
   components: { ImportUser, DataTable },
   methods: {
-    handleDelete ({ index, row }, done) {
+    async handleDelete ({ index, row }, done) {
+      // const res = await deleteSystem(row.record_id)
+      // if (res) {
+      //   this.$message.success('删除成功')
+      // }
+      this.$message.error('暂时无法删除三方业务系统')
       done()
     },
     async handleAdd (row, resolve) {
@@ -29,9 +35,18 @@ export default {
       }
       resolve()
     },
-    handleUpdate (row, resolve) {
+    async handleUpdate ({ index, row }, resolve) {
       // this.$message.success('保存已成功')
       console.log(row)
+      const res = await update(
+        {
+          recordId: row.record_id,
+          data: row
+        }
+      )
+      if (res) {
+        this.$message.success('保存成功')
+      }
       resolve()
     },
     handleImportDialogClose () {
@@ -40,6 +55,7 @@ export default {
   },
   data () {
     return {
+      data: [],
       dialogVisible: false,
       // 表格属性定义
       tableProps: {
@@ -60,22 +76,7 @@ export default {
               rules: [{ required: true, message: '请输入接口地址' }]
             },
             tableItem: {}
-          },
-          {
-            title: '备注',
-            name: 'memo',
-            formItem: {
-              component: {
-                name: 'el-input',
-                type: 'textarea',
-                maxLength: 1024
-              }
-            },
-            tableItem: {
-            }
           }
-        ],
-        data: [
         ],
         actionCol: {
           custom: [
@@ -103,8 +104,11 @@ export default {
     }
   },
   async mounted () {
-    const res = await queryPage({ pageData: this.pageData})
-    console.log(res)
+    const res = await queryPage({ pageData: this.pageData })
+    if (res) {
+      this.pageData = res
+      this.data = [...res.list]
+    }
   }
 }
 </script>

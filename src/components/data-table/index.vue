@@ -5,7 +5,7 @@
     :options="dtOptions"
     :columns="defaultProps.columns"
     index-row=""
-    :data="defaultProps.data"
+    :data="data"
     :row-handle="defaultProps.actionCol"
     :edit-template="defaultProps.editTemplate"
     :add-template="defaultProps.addTemplate"
@@ -73,7 +73,6 @@ export default {
   },
   data () {
     return {
-
       formOptions: {
         labelWidth: '100px',
         labelPosition: 'left',
@@ -87,8 +86,6 @@ export default {
         loading: false,
         // 列描述
         columns: [],
-        // 数据内容
-        data: [],
         // 分页配置
         pagination: {
           currentPage: 1,
@@ -152,13 +149,13 @@ export default {
        * @param done
        */
     handleRowAdd (row, done) {
-      this.formOptions.saveLoading = true
+      // this.formOptions.saveLoading = true
       new Promise(resolve => {
         this.$emit('onAdd', row, resolve)
       }).then(
         () => {
           done()
-          this.formOptions.saveLoading = false
+          // this.formOptions.saveLoading = false
         }
       )
     },
@@ -168,13 +165,13 @@ export default {
        * @param done
        */
     handleRowEdit (row, done) {
-      this.formOptions.saveLoading = true
+      // this.formOptions.saveLoading = true
       new Promise(resolve => {
         this.$emit('onUpdate', row, resolve)
       }).then(
         () => {
           done()
-          this.formOptions.saveLoading = false
+          // this.formOptions.saveLoading = false
         }
       )
     }
@@ -186,6 +183,10 @@ export default {
       default: () => {
         return {}
       }
+    },
+    data: {
+      type: Array,
+      default: () => []
     },
     // 自定义操作列事件注册
     customEvents: {

@@ -1,10 +1,11 @@
 import $$ from 'cmn-utils'
+
 /**
  * 分页对象
  */
 export default class PageInfo {
   // 页码，从1开始
-  pageNum = 1;
+  currentPage = 1;
 
   // 每页数量
   pageSize = 10;
@@ -30,17 +31,17 @@ export default class PageInfo {
   /**
    * 希望用户输入的页数不在合法范围（第一页到最后一页之外）
    * 时能够正确的响应到正确的结果页面，那么你可以配置reasonable为true，
-   * 这时如果pageNum<1,会查询第一页，如果pageNum>总页数,会查询最后一页
+   * 这时如果currentPage<1,会查询第一页，如果currentPage>总页数,会查询最后一页
    */
   reasonable = false;
 
   /**
    * 组装分页信息
-   * @param {number} pageNum page number, default 1
+   * @param {number} currentPage page number, default 1
    * @param {number} pageSize page size, default 10
    */
-  startPage (pageNum = 1, pageSize = 10) {
-    this.pageNum = pageNum
+  startPage (currentPage = 1, pageSize = 10) {
+    this.currentPage = currentPage
     this.pageSize = pageSize
     this.size = 0
     this.total = 0
@@ -53,12 +54,12 @@ export default class PageInfo {
 
   /**
    * 组装分页信息
-   * @param {number} pageNum page number
+   * @param {number} currentPage page number
    * @param {number} pageSize page size
    */
-  jumpPage (pageNum, pageSize) {
-    if ((pageNum && pageNum <= Math.ceil(this.totalPages)) || pageNum === 1) {
-      this.pageNum = pageNum
+  jumpPage (currentPage, pageSize) {
+    if ((currentPage && currentPage <= Math.ceil(this.totalPages)) || currentPage === 1) {
+      this.currentPage = currentPage
       if (pageSize) this.pageSize = pageSize
     }
     return this
@@ -93,17 +94,17 @@ export default class PageInfo {
 
   /**
    * 下一页或指定页数
-   * @param {number} pageNum
+   * @param {number} currentPage
    */
-  nextPage (pageNum) {
+  nextPage (currentPage) {
     if (this.totalPages !== -1) {
-      if (pageNum && pageNum <= Math.ceil(this.totalPages)) {
-        this.pageNum = pageNum
-      } else if (this.pageNum + 1 <= Math.ceil(this.totalPages)) {
-        this.pageNum++
+      if (currentPage && currentPage <= Math.ceil(this.totalPages)) {
+        this.currentPage = currentPage
+      } else if (this.currentPage + 1 <= Math.ceil(this.totalPages)) {
+        this.currentPage++
       }
     } else {
-      this.pageNum = this.totalPages
+      this.currentPage = this.totalPages
     }
     return this
   }
@@ -113,11 +114,11 @@ export default class PageInfo {
    */
   prevPage () {
     if (this.totalPages !== -1) {
-      if (this.pageNum - 1 > 0) {
-        this.pageNum--
+      if (this.currentPage - 1 > 0) {
+        this.currentPage--
       }
     } else {
-      this.pageNum = 1
+      this.currentPage = 1
     }
     return this
   }

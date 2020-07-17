@@ -1,12 +1,12 @@
 import request from '@/plugin/axios'
 /**
- * 创建三方业务系统
+ * 创建
  * @param data
  * @returns {AxiosPromise}
  */
 export function create (data) {
   return request({
-    url: 'v1/systems',
+    url: 'v1/forms',
     method: 'POST',
     data: data
   })
@@ -18,7 +18,7 @@ export function create (data) {
  */
 export function queryPage ({ pageData }) {
   return request({
-    url: `/v1/systems`,
+    url: `/v1/forms`,
     method: 'GET',
     pageInfo: pageData
   })
@@ -31,19 +31,19 @@ export function queryPage ({ pageData }) {
  */
 export function update ({ recordId, data }) {
   return request({
-    url: `/v1/systems/${recordId}`,
+    url: `/v1/forms/${recordId}`,
     method: 'PUT',
     data
   })
 }
 
 /**
- * 删除三方业务系统
+ * 删除
  * @param recordId 记录ID
  */
 export function deleteSystem (recordId) {
   return request({
-    url: `/v1/systems/${recordId}`,
+    url: `/v1/forms/${recordId}`,
     method: 'delete'
   })
 }

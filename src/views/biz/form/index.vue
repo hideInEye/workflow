@@ -40,7 +40,7 @@ export default {
         columns: [
           {
             title: '业务系统',
-            name: 'biz_id',
+            name: 'system_id',
             formItem: {
               component: {
                 name: 'el-select',
