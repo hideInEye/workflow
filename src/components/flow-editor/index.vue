@@ -12,7 +12,7 @@
 <script>
 import util from '@/libs/util'
 import { Command, ToolBar, AddItemPanel, CanvasPanel } from './plugins'
-import G6 from '@antv/g6/src'
+import G6 from '@antv/g6'
 import ToolBarPanel from './ToolBarPanel'
 import registerShape from './shapes'
 import registerBehavior from './behavior'

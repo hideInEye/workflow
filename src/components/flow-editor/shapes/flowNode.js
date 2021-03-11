@@ -25,6 +25,8 @@ const taskDefaultOptions = {
   }
 }
 
+
+
 const gatewayDefaultOptions = {
   icon: null,
   iconStyle: {

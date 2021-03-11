@@ -20,13 +20,21 @@ import PageHelper from '../../../libs/pageHelper'
 export default {
   components: { ImportUser, DataTable },
   methods: {
+    async QueryList(){
+      const res = await queryPage({ pageData: this.pageData })
+      if (res) {
+        this.pageData = res
+        this.data = [...res.list]
+      }
+    }
+    ,
     async handleDelete ({ index, row }, done) {
       // const res = await deleteSystem(row.record_id)
       // if (res) {
       //   this.$message.success('删除成功')
       // }
       this.$message.error('暂时无法删除三方业务系统')
-      done()
+      // done()
     },
     async handleAdd (row, resolve) {
       const res = await create(row)
@@ -37,7 +45,7 @@ export default {
     },
     async handleUpdate ({ index, row }, resolve) {
       // this.$message.success('保存已成功')
-      console.log(row)
+      // console.log(row)
       const res = await update(
         {
           recordId: row.record_id,
@@ -48,6 +56,7 @@ export default {
         this.$message.success('保存成功')
       }
       resolve()
+      await this.QueryList()
     },
     handleImportDialogClose () {
       this.dialogVisible = false
@@ -104,11 +113,7 @@ export default {
     }
   },
   async mounted () {
-    const res = await queryPage({ pageData: this.pageData })
-    if (res) {
-      this.pageData = res
-      this.data = [...res.list]
-    }
+  await this.QueryList()
   }
 }
 </script>

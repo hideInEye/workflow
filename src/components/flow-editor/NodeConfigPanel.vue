@@ -1,10 +1,10 @@
 <template>
   <div class="detailPanel">
-    <start-event-detail v-if="model.clazz=== 'start' " :model="model" :on-change="onChange"/>
-    <draft-node-detail v-else-if="model.clazz=== 'draft' " :model="model" :on-change="onChange"/>
-    <approve-node-detail v-else-if="model.clazz=== 'userTask' " :model="model" :on-change="onChange"/>
-    <flow-detail v-else-if="model.clazz=== 'flow' " :model="model" :on-change="onChange"/>
-    <auto-branch-detail v-else-if="model.clazz=== 'autoBranch' " :model="model" :on-change="onChange"/>
+    <start-event-detail v-if="model.clazz=== 'start' " :key="model.id" :model="model" :on-change="onChange"/>
+    <draft-node-detail v-else-if="model.clazz=== 'draft' " :key="model.id" :model="model" :on-change="onChange"/>
+    <approve-node-detail v-else-if="model.clazz=== 'userTask' " :key="model.id" :model="model" :on-change="onChange"/>
+    <flow-detail v-else-if="model.clazz=== 'flow' " :model="model" :key="model.id" :on-change="onChange"/>
+    <auto-branch-detail v-else-if="model.clazz=== 'autoBranch' " :key="model.id" :model="model" :on-change="onChange"/>
   </div>
 </template>
 

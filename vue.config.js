@@ -41,7 +41,7 @@ module.exports = {
     disableHostCheck: process.env.NODE_ENV === 'development', // 关闭 host check，方便使用 ngrok 之类的内网转发工具
     proxy: {
       '/web': {
-        target: 'http://localhost:10086/'
+        target: 'http://39.98.250.155:10086/'
       }
     }
   },
