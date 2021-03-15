@@ -42,6 +42,10 @@ module.exports = {
     proxy: {
       '/web': {
         target: 'http://39.98.250.155:10086/'
+        // target: 'http://127.0.0.1:10086/'
+      },
+      '/sys':{
+        target:'http://39.98.250.155:10098/'
       }
     }
   },

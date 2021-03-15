@@ -11,7 +11,7 @@
             <span>标题:</span>
           </el-col>
           <el-col :span="19">
-            <el-input v-model="item.title" size="small" placeholder="输入标题" @change="handleChange(index, item)"/>
+            <el-input v-model="item.code" size="small" placeholder="输入标题" @change="handleChange(index, item)"/>
           </el-col>
         </el-row>
       </div>
@@ -21,7 +21,7 @@
             <span>字段名:</span>
           </el-col>
           <el-col :span="16">
-            <el-input v-model="item.name" @change="handleChange(index, item)" size="small" placeholder="表单字段名"/>
+            <el-input v-model="item.value" @change="handleChange(index, item)" size="small" placeholder="表单字段名"/>
           </el-col>
         </el-row>
       </div>
@@ -64,7 +64,7 @@ export default {
       this.values.slice(index, 0, item)
       let validate = false
       this.values.forEach(d => {
-        validate = !!((d.title && d.title !== '') && (d.name && d.name !== '') && (d.type && d.type !== ''))
+        validate = !!((d.code && d.code !== '') && (d.value && d.value !== '') && (d.type && d.type !== ''))
       })
       if (validate) {
         this.$emit('input', this.values)
@@ -98,15 +98,15 @@ export default {
     return {
       dataTypes: [
         {
-          value: 'int',
+          value: 2,
           label: '数值型'
         },
         {
-          value: 'string',
+          value: 1,
           label: '字符串'
         },
         {
-          value: 'object',
+          value: 3,
           label: '对象'
         }
       ],
@@ -116,6 +116,11 @@ export default {
   },
   mounted () {
 
+  },
+  watch:{
+    values(oldValue,NewValue){
+      console.log(oldValue,NewValue)
+    }
   }
 }
 </script>

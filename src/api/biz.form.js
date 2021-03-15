@@ -6,7 +6,7 @@ import request from '@/plugin/axios'
  */
 export function create (data) {
   return request({
-    url: 'v1/forms',
+    url: '/web/v1/forms',
     method: 'POST',
     data: data
   })
@@ -18,9 +18,17 @@ export function create (data) {
  */
 export function queryPage ({ pageData }) {
   return request({
-    url: `/v1/forms`,
+    url: `/web/v1/forms`,
     method: 'GET',
     pageInfo: pageData
+  })
+}
+
+export function QueryFormList(params){
+  return request({
+    url:`/web/v1/forms`,
+    method:"GET",
+    data:params
   })
 }
 
@@ -31,7 +39,7 @@ export function queryPage ({ pageData }) {
  */
 export function update ({ recordId, data }) {
   return request({
-    url: `/v1/forms/${recordId}`,
+    url: `/web/v1/forms/${recordId}`,
     method: 'PUT',
     data
   })
@@ -43,7 +51,7 @@ export function update ({ recordId, data }) {
  */
 export function deleteSystem (recordId) {
   return request({
-    url: `/v1/forms/${recordId}`,
+    url: `/web/v1/forms/${recordId}`,
     method: 'delete'
   })
 }

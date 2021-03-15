@@ -6,7 +6,7 @@
     :center="true"
     @close="handleClose"
   >
-    <flow-editor ref="editor" :height="600" />
+    <flow-editor :data="RowData" ref="editor" :height="600" />
     <span slot="footer" class="dialog-footer">
         <el-button @click="handleClose">取 消</el-button>
         <el-button type="primary" @click="SaveFlowData">确 定</el-button>
@@ -26,13 +26,18 @@ export default {
     },
     // 保存数据
     SaveFlowData () {
-      console.log(this.$refs.editor.save())
+      console.log(this.$refs.editor.save(),'111')
+      this.$emit("onClose")
     }
   },
   props: {
     visible: {
       type: Boolean,
       required: true,
+      default: false
+    },
+    RowData:{
+      type: Object,
       default: false
     }
   },
@@ -45,6 +50,9 @@ export default {
         this.$emit('update:visible', v)
       }
     }
+  },
+  mounted() {
+
   }
 }
 </script>

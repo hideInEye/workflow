@@ -8,7 +8,7 @@
       @onUpdate="handleUpdate"
       :customEvents="customEvents"
     />
-    <import-user :visible="dialogVisible" @onClose="handleImportDialogClose"/>
+    <import-user :RowData="RowData" :visible="dialogVisible" @onClose="handleImportDialogClose"/>
   </d2-container>
 </template>
 
@@ -64,6 +64,7 @@ export default {
   },
   data () {
     return {
+      RowData:{},
       data: [],
       dialogVisible: false,
       // 表格属性定义
@@ -106,6 +107,7 @@ export default {
          * @param row
          */
         importUser: ({ index, row }) => {
+          this.RowData = row
           this.dialogVisible = true
         }
       },

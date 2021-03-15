@@ -1,11 +1,11 @@
 <template>
   <div class="row">
       <span>通知方式：</span>
-        <el-checkbox-group v-model="notify" @change="v => {onChange('config', {notify: v})}">
-          <el-checkbox label="待办">待办</el-checkbox>
-          <el-checkbox label="邮件">邮件</el-checkbox>
-          <el-checkbox label="短信">短信</el-checkbox>
-        </el-checkbox-group>
+        <el-radio-group v-model="notify" @change="v => {onChange('config', {notify: v})}">
+          <el-radio label="待办">待办</el-radio>
+          <el-radio label="邮件">邮件</el-radio>
+          <el-radio label="短信">短信</el-radio>
+        </el-radio-group>
   </div>
 </template>
 

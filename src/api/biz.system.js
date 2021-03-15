@@ -1,4 +1,5 @@
 import request from '@/plugin/axios'
+// import {stringify} from 'qs'
 /**
  * 创建三方业务系统
  * @param data
@@ -6,7 +7,7 @@ import request from '@/plugin/axios'
  */
 export function create (data) {
   return request({
-    url: 'v1/systems',
+    url: '/web/v1/systems',
     method: 'POST',
     data: data
   })
@@ -18,9 +19,17 @@ export function create (data) {
  */
 export function queryPage ({ pageData }) {
   return request({
-    url: `/v1/systems`,
+    url: `/web/v1/systems`,
     method: 'GET',
     pageInfo: pageData
+  })
+}
+
+export function QueryList(params){
+  return request({
+    url:`/web/v1/systems`,
+    method:"GET",
+    data:params
   })
 }
 
@@ -31,7 +40,7 @@ export function queryPage ({ pageData }) {
  */
 export function update ({ recordId, data }) {
   return request({
-    url: `/v1/systems/${recordId}`,
+    url: `/web/v1/systems/${recordId}`,
     method: 'PUT',
     data
   })
@@ -43,7 +52,15 @@ export function update ({ recordId, data }) {
  */
 export function deleteSystem (recordId) {
   return request({
-    url: `/v1/systems/${recordId}`,
+    url: `/web/v1/systems/${recordId}`,
     method: 'delete'
+  })
+}
+
+export function QueryUserList(params){
+  return request({
+    url:`/sys/v1/users`,
+    method:'GET',
+    data:params
   })
 }

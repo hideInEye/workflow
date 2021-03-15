@@ -9,7 +9,8 @@
       filter-placeholder="请输入用户姓名"
       v-model="value"
       :titles="['业务系统用户', '已导入用户']"
-      :data="data">
+      :data="data"
+    >
       <div class="buttons" slot="left-footer">
         <el-button size="small" @click="prePage">上一页</el-button>
         <el-button size="small" @click="nextPage">下一页</el-button>
@@ -23,6 +24,7 @@
 </template>
 
 <script>
+import {QueryUserList} from '@/api/biz.system'
 export default {
   // 导入业务用户组件
   name: 'ImportUser',
@@ -31,9 +33,26 @@ export default {
       type: Boolean,
       required: true,
       default: false
+    },
+    RowData:{
+      type:Object,
+      default: false
     }
   },
   methods: {
+    async QueryUser(){
+      const res = await QueryUserList({q:'list'})
+      if(res&&!res.error){
+        const Data = res.list.map(item=>{
+          return {
+            label:item.real_name,
+            value:item.record_id,
+            key:item.record_id
+          }
+        })
+        this.data =Data
+      }
+    },
     // 关闭时事件
     handleClose () {
       this.$emit('onClose')
@@ -42,7 +61,7 @@ export default {
      * 导入用户
      */
     importUser () {
-
+    console.log(this.value)
     },
     // 上一页
     prePage () {
@@ -65,8 +84,16 @@ export default {
       }
     }
   },
+  watch:{
+    RowData(val,value){
+    if(val&&val.user_info_api){
+       this.QueryUser(val.user_info_api)
+    }
+    }
+  },
   data () {
     return {
+      Data:{},
       // 当前页码
       currentPage: 0,
       // 数据总页数
@@ -80,6 +107,9 @@ export default {
         return item.label.indexOf(query) > -1
       }
     }
+  },
+  mounted() {
+
   }
 }
 </script>
