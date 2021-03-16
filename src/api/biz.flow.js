@@ -57,8 +57,16 @@ export function UpdateFlowEdit (id,data){
     {
       url:`/web/v1/edit_flows/${id}`,
       method:"PUT",
-      body:data
+      data
     }
   )
 
+}
+
+export function QueryUserList (data) {
+  return request({
+    url:'/web/v1/b_users',
+    method:"GET",
+    data:data
+  })
 }

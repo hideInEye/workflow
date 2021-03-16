@@ -6,6 +6,7 @@
     :columns="defaultProps.columns"
     index-row=""
     :data="data"
+    :pagination="defaultProps.pagination"
     :row-handle="defaultProps.actionCol"
     :edit-template="defaultProps.editTemplate"
     :add-template="defaultProps.addTemplate"
@@ -17,6 +18,7 @@
     @row-edit="handleRowEdit"
     :form-options="formOptions"
     v-on="{...customEvents}"
+    @pagination-current-change="paginationChange"
   >
     <div style="margin-bottom: 8px" slot="header">
       <el-button type="primary" @click="onAdd">新增</el-button>
@@ -86,12 +88,12 @@ export default {
         loading: false,
         // 列描述
         columns: [],
-        // 分页配置
-        pagination: {
-          currentPage: 1,
-          pageSize: 10,
-          total: 0
-        },
+        // // 分页配置
+        // pagination: {
+        //   currentPage: 1,
+        //   pageSize: 10,
+        //   total: 10
+        // },
         actionCol: {
           remove: {
             icon: 'el-icon-delete',
@@ -119,8 +121,14 @@ export default {
           ...parseData(value)
         }
       }
+    },
+    pagination(oldValue,newValue){
+      if(oldValue){
+        this.defaultProps.pagination = oldValue
+      }
     }
   },
+
   methods: {
     /**
        * 点击新增时
@@ -174,6 +182,9 @@ export default {
           // this.formOptions.saveLoading = false
         }
       )
+    },
+    paginationChange(current){
+      this.$emit('paginationCurrentChange',current)
     }
   },
   props: {
@@ -192,6 +203,16 @@ export default {
     customEvents: {
       type: Object,
       default: () => {
+        return {}
+      }
+    },
+    paginationCurrentChange:{
+      type:Function,
+      default:Function
+    },
+    pagination:{
+      type:Object,
+      default:()=>{
         return {}
       }
     }

@@ -7,8 +7,10 @@
       @onUpdate="handleUpdate"
       :custom-events="customEvents"
       :data="data"
+      :pagination="pagination"
+      @paginationCurrentChange="Change"
     />
-    <flow-editor-dialog :RowData="rowData" :visible="editorDialogVisible" @onClose="handleDialogClose"/>
+    <flow-editor-dialog :RowData="rowData" :row_data="RowData" :visible="editorDialogVisible" @onClose="handleDialogClose"/>
   </d2-container>
 </template>
 
@@ -31,17 +33,27 @@ export default {
           {
             title: '业务系统',
             name:'system_id',
+            key:'system_id',
             formItem: {
                 rules:[{required: true,message: '必须选择一个业务系统'}],
                 component: {
                   name:'el-select',
                   option:[]
                 }
+            },
+          },
+          {
+            title:"业务系统",
+            name:'system_name',
+            key:'system_name',
+            tableItem: {
+              width: 150
             }
           },
           {
             title: '业务表单',
             name: 'form_id',
+            key: 'form_id',
             formItem: {
               rules: [{ required: true, message: '必须选择一个业务表单' }],
               component: {
@@ -49,11 +61,17 @@ export default {
                 option:[]
               }
             },
+          },
+          {
+            title:'业务表单',
+            name: 'form_name',
+            key: 'form_name',
             tableItem: {}
           },
           {
             title: '流程名称',
             name: 'name',
+            key: 'name',
             formItem: {
               rules: [
                 { required: true, message: '名称必须填写' },
@@ -65,6 +83,7 @@ export default {
           {
             title: '流程编号',
             name: 'code',
+            key: 'code',
             formItem: {
               rules: [
                 { required: true, message: '编号必须填写' },
@@ -76,6 +95,7 @@ export default {
           {
             title: '版本号',
             name: 'version',
+            key: 'version',
             tableItem: {
               width: 80
             }
@@ -83,6 +103,7 @@ export default {
           {
             title: '状态',
             name: 'status',
+            key: 'status',
             // formItem: {
             //   component: {
             //     name:FlowStatus
@@ -90,7 +111,8 @@ export default {
             // },
             tableItem: {
               component: {
-                name: FlowStatus
+                name: FlowStatus,
+                key:'status'
               },
               width: 80
             }
@@ -98,6 +120,7 @@ export default {
           {
             title: '备注',
             name: 'memo',
+            key: 'memo',
             formItem: {
               rules: [
                 { max: 1024, message: '不能超过1024个字符' }
@@ -120,13 +143,15 @@ export default {
               emit: 'OpenEditFlowDialog',
             }
           ]
-        }
+        },
       },
+      pagination: {},
       customEvents: {
         // 打开编辑器
         OpenEditFlowDialog: ({index,row}) => {
           if(row.config&&row.config!==''){
             this.rowData=JSON.parse(row.config)
+            this.RowData = row
           }
           this.editorDialogVisible = true
         }
@@ -134,10 +159,15 @@ export default {
       editorDialogVisible: false,
       FormListData:[],
       data:[],
-      pageData: PageHelper.create()
+      pageData: PageHelper.create(),
+      RowData:{}
     }
   },
   methods: {
+    Change(currentPage){
+      this.pageData.currentPage=currentPage
+      this.QueryFlow()
+    },
     /**
      * 删除
      * @param index 序号
@@ -149,6 +179,7 @@ export default {
       const res= await deleteFlow(row.record_id)
       if(res&&!res.error){
         this.$message.success("删除成功")
+        await this.QueryFlow()
       }
       done()
     },
@@ -184,7 +215,7 @@ export default {
            key:item.record_id
          }
        })
-      this.tableProps.columns[1].formItem.component.options = data
+      this.tableProps.columns[2].formItem.component.options = data
      }
    },
     async QuerySystemList(){
@@ -204,6 +235,12 @@ export default {
       const res = await queryPageFlow({pageData: this.pageData})
       if(res&&!res.error){
         this.pageData = res
+        const pagination={
+          currentPage: res.currentPage,
+          pageSize:res.pageSize,
+          total: res.total
+        }
+        this.pagination = pagination
         this.data=[...res.list]
       }
     }

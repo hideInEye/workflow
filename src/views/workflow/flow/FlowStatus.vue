@@ -1,27 +1,31 @@
 <template>
-  <span>
+  <span :key="value">
     <el-tag
       size="small"
       effect="dark"
       type="success"
+      :key="flowStatus"
       v-if="flowStatus === 1"
     >{{statusText}}</el-tag>
   <el-tag
     size="small"
     effect="dark"
     type="danger"
+    :key="flowStatus"
     v-if="flowStatus === 2"
   >{{statusText}}</el-tag>
     <el-tag
       size="small"
       effect="dark"
       type="warning"
+      :key="flowStatus"
       v-if="flowStatus === 3"
     >{{statusText}}</el-tag>
     <el-tag
       size="small"
       effect="dark"
       type="info"
+      :key="flowStatus"
       v-if="flowStatus === 4"
     >{{statusText}}</el-tag>
   </span>

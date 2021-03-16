@@ -7,6 +7,9 @@
       @onAdd="handleAdd"
       @onUpdate="handleUpdate"
       :customEvents="customEvents"
+      :pagination="pagination"
+      @paginationCurrentChange="Change"
+
     />
     <import-user :RowData="RowData" :visible="dialogVisible" @onClose="handleImportDialogClose"/>
   </d2-container>
@@ -15,15 +18,33 @@
 <script>
 import DataTable from '@/components/data-table/index'
 import ImportUser from './ImportUser'
-import { create, queryPage, update } from '../../../api/biz.system'
+import {AsyncUser, create, queryPage, update} from '../../../api/biz.system'
 import PageHelper from '../../../libs/pageHelper'
 export default {
   components: { ImportUser, DataTable },
   methods: {
+    Change(currentPage){
+      this.pageData.currentPage=currentPage
+      this.QueryList()
+    },
+   async syncUser(row){
+      const res = await AsyncUser(row.record_id)
+     if(res&&!res.error){
+       this.$message.success("同步成功")
+     }
+
+    }
+    ,
     async QueryList(){
       const res = await queryPage({ pageData: this.pageData })
       if (res) {
         this.pageData = res
+        const pagination={
+          currentPage: res.currentPage,
+          pageSize:res.pageSize,
+          total: res.total
+        }
+        this.pagination = pagination
         this.data = [...res.list]
       }
     }
@@ -99,6 +120,7 @@ export default {
           ]
         }
       },
+
       // 传入crud组件的自定义事件列表
       customEvents: {
         /**
@@ -107,11 +129,13 @@ export default {
          * @param row
          */
         importUser: ({ index, row }) => {
-          this.RowData = row
-          this.dialogVisible = true
+          // this.RowData = row
+          // this.dialogVisible = true
+          this.syncUser(row)
         }
       },
-      pageData: PageHelper.create()
+      pageData: PageHelper.create(),
+      pagination: {},
     }
   },
   async mounted () {

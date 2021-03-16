@@ -118,7 +118,7 @@ export default {
 
   },
   watch:{
-    values(oldValue,NewValue){
+    value(oldValue,NewValue){
       console.log(oldValue,NewValue)
     }
   }

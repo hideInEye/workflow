@@ -64,3 +64,11 @@ export function QueryUserList(params){
     data:params
   })
 }
+
+// 同步业务系统用户数据
+export function AsyncUser(id){
+  return request({
+    url:`/web/v1/b_sync_user_info/${id}`,
+    method:"PUT"
+  })
+}

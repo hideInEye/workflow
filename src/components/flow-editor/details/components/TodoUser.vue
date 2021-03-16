@@ -9,7 +9,7 @@
         @close="onCloseUser(index)"
         :key="item.record_id"
       >
-        <i class="el-icon-user"></i>{{item.user_name}}
+        <i class="el-icon-user"></i>{{item.name}}
       </el-tag>
     </div>
     <el-button size="small" @click="selectUserModalVisible = true">添加</el-button>
@@ -38,7 +38,9 @@ export default {
     },
     // 关闭用户选择框处理
     handleSelectUser (users) {
-      this.users = users
+      if(users&&users.length>0){
+        this.users = users
+      }
       this.selectUserModalVisible = false
       this.$emit('onChangeUser', this.users)
     }

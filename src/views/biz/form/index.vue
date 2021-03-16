@@ -6,6 +6,8 @@
       @onAdd="handleAdd"
       @onUpdate="handleUpdate"
       :data="data"
+      :pagination="pagination"
+      @paginationCurrentChange="Change"
     />
   </d2-container>
 </template>
@@ -20,10 +22,20 @@ import PageHelper from "@/libs/pageHelper";
 export default {
   components: { DataTable },
   methods: {
+    Change(currentPage){
+      this.pageData.currentPage=currentPage
+      this.QueryFormList()
+    },
     async QueryFormList(){
       const res = await queryPage({pageData: this.pageData})
       if(res){
         this.pageData = res
+        const pagination={
+          currentPage: res.currentPage,
+          pageSize:res.pageSize,
+          total: res.total
+        }
+        this.pagination = pagination
         this.data=[...res.list]
       }
     },
@@ -80,6 +92,7 @@ export default {
   },
   data () {
     return {
+      pagination: {},
       data: [],
       pageData: PageHelper.create(),
       tableProps: {
@@ -87,24 +100,26 @@ export default {
         columns: [
           {
             title: '业务系统',
+            key:'system_id',
             name: 'system_id',
             formItem: {
               rules: [{ required: true, message: '名称必须填写' }],
               component: {
                 name: 'el-select',
-                option:[
-                  {
-                    label:'111',
-                    value:'1'
-                  }
-                ]
+                option:[]
               }
             },
-            tableItem: {},
+          },
+          {
+            title:"业务系统",
+            name:'system_name',
+            key: 'system_name',
+            tableItem: {}
           },
           {
             title: '表单名称',
             name: 'name',
+            key:'name' ,
             formItem: {
               rules: [{ required: true, message: '名称必须填写' }]
             },
@@ -113,6 +128,7 @@ export default {
           {
             title: '表单编号',
             name:'code',
+            key:'code',
             formItem: {
               rules: [{required: true,message: "编号必须填写"}]
             }
@@ -121,6 +137,7 @@ export default {
           {
             title: '表单字段',
             name: 'form_field',
+            key: 'form_field',
             formItem: {
               rules: [
                 { required: true, message: '必须配置表单字段' }

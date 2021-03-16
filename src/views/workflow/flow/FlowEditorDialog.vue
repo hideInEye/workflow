@@ -16,6 +16,7 @@
 
 <script>
 import FlowEditor from '../../../components/flow-editor/index'
+import {UpdateFlowEdit} from "@/api/biz.flow";
 export default {
   // 流程编辑器模态框
   name: 'FlowEditorDialog',
@@ -25,9 +26,15 @@ export default {
       this.$emit('onClose')
     },
     // 保存数据
-    SaveFlowData () {
-      console.log(this.$refs.editor.save(),'111')
-      this.$emit("onClose")
+    async  SaveFlowData () {
+      const data = this.$refs.editor.save()
+      const  res = await UpdateFlowEdit(this.row_data.record_id,data)
+      if(res&&!res.error){
+        this.$message.success("绘制完成")
+        this.$emit("onClose")
+      }else{
+        this.$message.error("绘制失败")
+      }
     }
   },
   props: {
@@ -39,7 +46,11 @@ export default {
     RowData:{
       type: Object,
       default: false
-    }
+    },
+    row_data:{
+      type:Object,
+      default:false
+}
   },
   computed: {
     mVisible: {
