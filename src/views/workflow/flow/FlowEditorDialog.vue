@@ -44,8 +44,10 @@ export default {
       default: false
     },
     RowData:{
-      type: Object,
-      default: false
+      default:()=>{
+        return {}
+      },
+      type:Object
     },
     row_data:{
       type:Object,

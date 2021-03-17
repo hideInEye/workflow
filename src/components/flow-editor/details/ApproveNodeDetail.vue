@@ -6,7 +6,7 @@
     <todo-user title="默认处理人" :select-users="todo_users" @onChangeUser="handleChangeTodoUser"/>
     <el-divider></el-divider>
     <div class="row">
-      <span>审批类型：</span>
+      <span>流转方式：</span>
       <el-radio-group size="small" v-model="approveType" @change=" value => {onChange('config', {approve_type: value})}">
         <el-radio-button :label="1">会签</el-radio-button>
         <el-radio-button :label="2">或签</el-radio-button>
@@ -37,8 +37,24 @@
           :value="item.value">
         </el-option>
       </el-select>
+
+
+    </div>
+    <div class="row">
+      <span>
+        是否需要动态审核人:
+      </span>
+      <el-select value="" size="small" v-model="process_dynamic" @change="value => { onChange('config', {process_dynamic: value})}" placeholder="请选择">
+        <el-option
+          v-for="item in process_data"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+      </el-select>
     </div>
     <todo-user v-if="timeout === 2" title="转办人" :select-users="next_users" @onChangeUser="handleChangeNextDoUser"/>
+
   </el-card>
 </template>
 
@@ -65,6 +81,7 @@ export default {
       approveType: (this.model.config && this.model.config.approve_type) || 2,
       // 操作时限
       doLimit: this.model.config && this.model.config.do_limit,
+      process_dynamic:this.model.config&&this.model.config.process_dynamic,
       options: [
         {
           label: '自动跳过',
@@ -81,7 +98,25 @@ export default {
         {
           label: '回退起草节点',
           value: 4
+        },
+        {
+          label: '等待',
+          value:5
         }
+      ],
+      process_data:[
+        {
+          label:'需要',
+          value:1
+        },
+        {
+          label:'不需要',
+          value:2
+        },
+        {
+          label:'限制动态审核人',
+          value:3
+        },
       ]
     }
   },

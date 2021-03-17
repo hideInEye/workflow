@@ -1,17 +1,21 @@
 <template>
-  <d2-container>
-    <data-table
-      :options="tableProps"
-      @onDelete="handleDelete"
-      @onAdd="handleAdd"
-      @onUpdate="handleUpdate"
-      :custom-events="customEvents"
-      :data="data"
-      :pagination="pagination"
-      @paginationCurrentChange="Change"
-    />
-    <flow-editor-dialog :RowData="rowData" :row_data="RowData" :visible="editorDialogVisible" @onClose="handleDialogClose"/>
-  </d2-container>
+  <div>
+    <d2-container>
+      <data-table
+        :options="tableProps"
+        @onDelete="handleDelete"
+        @onAdd="handleAdd"
+        @onUpdate="handleUpdate"
+        :custom-events="customEvents"
+        :data="data"
+        :pagination="pagination"
+        @paginationCurrentChange="Change"
+      />
+      <flow-editor-dialog :RowData="rowData" :row_data="RowData" :visible="editorDialogVisible" @onClose="handleDialogClose"/>
+
+    </d2-container>
+    <copy-flow :visible="CopyVisible" @Close="handleCopyClose" />
+  </div>
 </template>
 
 <script>
@@ -22,9 +26,10 @@ import {QueryFormList} from "@/api/biz.form";
 import {QueryList} from "@/api/biz.system";
 import {queryPageFlow, createFlow, updateFlow, deleteFlow} from "@/api/biz.flow";
 import PageHelper from "@/libs/pageHelper";
+import CopyFlow from "@/views/workflow/flow/CopyFlow";
 export default {
   name: 'index',
-  components: { FlowEditorDialog, DataTable },
+  components: { FlowEditorDialog, DataTable,CopyFlow },
   data () {
     return {
       rowData:{},
@@ -47,7 +52,7 @@ export default {
             name:'system_name',
             key:'system_name',
             tableItem: {
-              width: 150
+              width: 200
             }
           },
           {
@@ -66,7 +71,9 @@ export default {
             title:'业务表单',
             name: 'form_name',
             key: 'form_name',
-            tableItem: {}
+            tableItem: {
+              width: 200
+            }
           },
           {
             title: '流程名称',
@@ -78,7 +85,9 @@ export default {
                 { max: 100, message: '不能超过100个字符' }
               ]
             },
-            tableItem: {}
+            tableItem: {
+              width: 250
+            }
           },
           {
             title: '流程编号',
@@ -90,7 +99,9 @@ export default {
                 { max: 100, message: '不能超过100个字符' }
               ]
             },
-            tableItem: {}
+            tableItem: {
+              width: 200
+            }
           },
           {
             title: '版本号',
@@ -131,7 +142,8 @@ export default {
                 maxLength: 1024
               }
             }
-          }
+          },
+
         ],
         data: [],
         actionCol: {
@@ -141,6 +153,12 @@ export default {
               type: 'warning',
               size: 'small',
               emit: 'OpenEditFlowDialog',
+            },
+            {
+              text: '复制流程',
+              type:'success',
+              size: "small",
+              emit: "OpenCopyFlow"
             }
           ]
         },
@@ -152,14 +170,22 @@ export default {
           if(row.config&&row.config!==''){
             this.rowData=JSON.parse(row.config)
             this.RowData = row
+          }else{
+            this.rowData={}
           }
+          // this.rowData=JSON.stringify(row)
           this.editorDialogVisible = true
+        },
+        OpenCopyFlow:({index,row})=>{
+          this.copyRow = row
+          this.CopyVisible = true
         }
       },
       editorDialogVisible: false,
       FormListData:[],
       data:[],
       pageData: PageHelper.create(),
+      CopyVisible:false,
       RowData:{}
     }
   },
@@ -204,6 +230,9 @@ export default {
     },
     handleDialogClose () {
       this.editorDialogVisible = false
+    },
+    handleCopyClose(){
+     this.CopyVisible = false
     },
    async QueryFormList () {
       const res = await QueryFormList({q:'list'})

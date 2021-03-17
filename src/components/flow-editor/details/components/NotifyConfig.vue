@@ -2,9 +2,8 @@
   <div class="row">
       <span>通知方式：</span>
         <el-radio-group v-model="notify" @change="v => {onChange('config', {notify: v})}">
-          <el-radio label="待办">待办</el-radio>
-          <el-radio label="邮件">邮件</el-radio>
-          <el-radio label="短信">短信</el-radio>
+          <el-radio :label="2">邮件</el-radio>
+          <el-radio :label="1">短信</el-radio>
         </el-radio-group>
   </div>
 </template>

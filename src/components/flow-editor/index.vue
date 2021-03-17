@@ -27,7 +27,7 @@ export default {
     return {
       cmdPlugin: null,
       graph: null,
-      selectedModel: {}
+      selectedModel: {},
     }
   },
   props: {
@@ -36,13 +36,10 @@ export default {
       default: 800
     },
     data: {
-      type: Object,
-      default: () => (
-        {
-          nodes: [],
-          edges: []
-        }
-      )
+      default:()=>{
+        return {}
+      },
+      type:Object
     },
     mode: {
       type: String,
@@ -136,6 +133,15 @@ export default {
       }
     })
     this.graph.setMode(this.mode)
+    // let data
+    // if(this.data){
+    //    data =JSON.parse(this.data)
+    // }
+    // let NewData ={}
+    // if(data.config&&data.config!==''){
+    //   NewData = data.config
+    // }
+    // this.graph.data(this.initShape(NewData))
     this.graph.data(this.initShape(this.data))
     this.graph.render()
     this.initEvents()
