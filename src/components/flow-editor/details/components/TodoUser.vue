@@ -7,7 +7,7 @@
         type="info"
         v-for="(item, index) in users"
         @close="onCloseUser(index)"
-        :key="item.record_id"
+        :key="item.user_id"
       >
         <i class="el-icon-user"></i>{{item.name}}
       </el-tag>

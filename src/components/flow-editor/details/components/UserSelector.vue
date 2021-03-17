@@ -7,7 +7,7 @@
     :append-to-body="true"
     >
     <el-select style="width: 100%" v-model="users" filterable multiple :filter-method="QueryLikeName" >
-      <el-option v-for="item in data" :label="item.name" :value="item.record_id" :key="item.record_id"></el-option>
+      <el-option v-for="item in data" :label="item.name" :value="item.user_id" :key="item.user_id"></el-option>
     </el-select>
     <span slot="footer" class="dialog-footer">
       <el-button @click="handlerClose">取 消</el-button>
