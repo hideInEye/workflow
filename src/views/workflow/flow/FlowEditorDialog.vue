@@ -27,7 +27,9 @@ export default {
     },
     // 保存数据
     async  SaveFlowData () {
-      const data = this.$refs.editor.save()
+      const data = {
+        config:this.$refs.editor.save()
+      }
       const  res = await UpdateFlowEdit(this.row_data.record_id,data)
       if(res&&!res.error){
         this.$message.success("绘制完成")
