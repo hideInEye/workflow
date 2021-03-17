@@ -169,10 +169,10 @@ export default {
         OpenEditFlowDialog: ({index,row}) => {
           if(row.config&&row.config!==''){
             this.rowData=JSON.parse(row.config)
-            this.RowData = row
           }else{
             this.rowData={}
           }
+          this.RowData = row
           // this.rowData=JSON.stringify(row)
           this.editorDialogVisible = true
         },

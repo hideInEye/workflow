@@ -32,8 +32,7 @@ export default {
   },
   methods: {
     handlerClose () {
-      const data = this.data.filter(item=>this.users.includes(item.record_id))
-      this.$emit('onClose', data)
+      this.$emit('onClose', this.users)
     },
    async QueryUserListData(params){
       const res = await QueryUserList(params)
@@ -42,7 +41,6 @@ export default {
      }
     },
     async QueryLikeName (e) {
-
       const res = await QueryUserList({
         q:'page',
         current:1,

@@ -38,6 +38,7 @@ export default {
     },
     // 关闭用户选择框处理
     handleSelectUser (users) {
+      console.log(users)
       if(users&&users.length>0){
         this.users = users
       }
