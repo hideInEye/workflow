@@ -18,7 +18,8 @@ export default {
 
     },
     // G6
-    graph: null
+    graph: null,
+    row:{}
   },
   mutations: {
     /**
@@ -36,6 +37,17 @@ export default {
      */
     setGraph (state, graph) {
       state.graph = graph
+    },
+    // 保存审批流程行数据
+    saveRowData(state,row){
+      console.log(row)
+      state.row=row
     }
+  },
+  actions: {
+    increment (context) {
+      context.commit('increment')
+    },
+
   }
 }

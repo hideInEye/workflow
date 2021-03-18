@@ -72,7 +72,7 @@ export default {
      * @param value
      */
     handleConditionChange (value) {
-      const label = this.field.title + value.condition + value.value
+      const label = this.field.value + value.condition + value.value
       // 更新当前出线对象的label属性
       this.graph.update(this.node, { label })
       this.configVisible = false

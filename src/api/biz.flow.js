@@ -70,3 +70,13 @@ export function QueryUserList (data) {
     data:data
   })
 }
+
+// 根据表单id查询表单字段列表
+
+export function QuerySystemList(data){
+  return request({
+    url:'/web/v1/form_fields',
+    method:"GET",
+    data:data
+  })
+}

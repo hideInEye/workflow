@@ -175,6 +175,9 @@ export default {
           this.RowData = row
           // this.rowData=JSON.stringify(row)
           this.editorDialogVisible = true
+          this.$store.commit("workflow/editor/saveRowData",{
+            row
+          })
         },
         OpenCopyFlow:({index,row})=>{
           this.copyRow = row
