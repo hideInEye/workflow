@@ -5,6 +5,7 @@
     <approve-node-detail v-else-if="model.clazz=== 'userTask' " :key="model.id" :model="model" :on-change="onChange"/>
     <flow-detail v-else-if="model.clazz=== 'flow' " :model="model" :key="model.id" :on-change="onChange"/>
     <auto-branch-detail v-else-if="model.clazz=== 'autoBranch' " :key="model.id" :model="model" :on-change="onChange"/>
+    <free-flow v-else-if="model.clazz==='freeNode'" :key="model.id" :model="model"  :on-change="onChange" />
   </div>
 </template>
 
@@ -14,10 +15,11 @@ import DraftNodeDetail from './details/DraftNodeDetail'
 import ApproveNodeDetail from './details/ApproveNodeDetail'
 import FlowDetail from './details/FlowDetail'
 import AutoBranchDetail from './details/AutoBranchDetail'
+import FreeFlow from  './details/FreeFlow'
 import {mapState} from 'vuex'
 export default {
   name: 'NodeConfigPanel',
-  components: { AutoBranchDetail, FlowDetail, ApproveNodeDetail, DraftNodeDetail, StartEventDetail },
+  components: { AutoBranchDetail, FlowDetail, ApproveNodeDetail, DraftNodeDetail, StartEventDetail,FreeFlow },
   props: {
     onChange: {
       type: Function,
