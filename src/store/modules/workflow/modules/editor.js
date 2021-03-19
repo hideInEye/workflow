@@ -1,25 +1,13 @@
+import {QuerySystemList} from "@/api/biz.flow";
+
 export default {
   namespaced: true,
   state: {
-    // 当前编辑的流程
-    flow: {
-      form: [
-        {
-          title: '标题',
-          name: 'title',
-          type: 'string'
-        },
-        {
-          title: '金额',
-          name: 'number',
-          type: 'number'
-        }
-      ]
-
-    },
     // G6
     graph: null,
-    row:{}
+    flowData: [],
+    // 行数据
+    rowData:{}
   },
   mutations: {
     /**
@@ -27,7 +15,7 @@ export default {
      * @param state
      * @param flow flow对象
      */
-    save (state, flow) {
+    save(state, flow) {
       state.flow = flow
     },
     /**
@@ -35,19 +23,33 @@ export default {
      * @param state
      * @param graph
      */
-    setGraph (state, graph) {
+    setGraph(state, graph) {
       state.graph = graph
     },
     // 保存审批流程行数据
+    saveFlowData(state, row) {
+      state.flowData = row
+    },
     saveRowData(state,row){
-      console.log(row)
-      state.row=row
+      console.log(row,'modules')
+     state.rowData=row
+
     }
   },
   actions: {
-    increment (context) {
-      context.commit('increment')
+    async saveFlowData({commit}, row) {
+      const params = {
+        q: 'list',
+        form_id: row.form_id
+      }
+      const res = await QuerySystemList(params)
+      if (res && !res.error) {
+        commit("saveFlowData", res.list)
+      }
     },
+    saveRowData({commit},row){
+      commit("saveRowData",row)
+    }
 
   }
 }

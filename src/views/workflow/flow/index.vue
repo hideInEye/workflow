@@ -11,10 +11,10 @@
         :pagination="pagination"
         @paginationCurrentChange="Change"
       />
-      <flow-editor-dialog :RowData="rowData" :row_data="RowData" :visible="editorDialogVisible" @onClose="handleDialogClose"/>
+      <flow-editor-dialog v-if="editorDialogVisible" :visible="editorDialogVisible" @onClose="handleDialogClose"/>
 
     </d2-container>
-    <copy-flow :visible="CopyVisible" @Close="handleCopyClose" />
+    <copy-flow :visible="CopyVisible" @Close="handleCopyClose"/>
   </div>
 </template>
 
@@ -27,30 +27,30 @@ import {QueryList} from "@/api/biz.system";
 import {queryPageFlow, createFlow, updateFlow, deleteFlow} from "@/api/biz.flow";
 import PageHelper from "@/libs/pageHelper";
 import CopyFlow from "@/views/workflow/flow/CopyFlow";
+
 export default {
   name: 'index',
-  components: { FlowEditorDialog, DataTable,CopyFlow },
-  data () {
+  components: {FlowEditorDialog, DataTable, CopyFlow},
+  data() {
     return {
-      rowData:{},
       tableProps: {
         columns: [
           {
             title: '业务系统',
-            name:'system_id',
-            key:'system_id',
+            name: 'system_id',
+            key: 'system_id',
             formItem: {
-                rules:[{required: true,message: '必须选择一个业务系统'}],
-                component: {
-                  name:'el-select',
-                  option:[]
-                }
+              rules: [{required: true, message: '必须选择一个业务系统'}],
+              component: {
+                name: 'el-select',
+                option: []
+              }
             },
           },
           {
-            title:"业务系统",
-            name:'system_name',
-            key:'system_name',
+            title: "业务系统",
+            name: 'system_name',
+            key: 'system_name',
             tableItem: {
               width: 200
             }
@@ -60,15 +60,15 @@ export default {
             name: 'form_id',
             key: 'form_id',
             formItem: {
-              rules: [{ required: true, message: '必须选择一个业务表单' }],
+              rules: [{required: true, message: '必须选择一个业务表单'}],
               component: {
-                name:'el-select',
-                option:[]
+                name: 'el-select',
+                option: []
               }
             },
           },
           {
-            title:'业务表单',
+            title: '业务表单',
             name: 'form_name',
             key: 'form_name',
             tableItem: {
@@ -81,8 +81,8 @@ export default {
             key: 'name',
             formItem: {
               rules: [
-                { required: true, message: '名称必须填写' },
-                { max: 100, message: '不能超过100个字符' }
+                {required: true, message: '名称必须填写'},
+                {max: 100, message: '不能超过100个字符'}
               ]
             },
             tableItem: {
@@ -95,8 +95,8 @@ export default {
             key: 'code',
             formItem: {
               rules: [
-                { required: true, message: '编号必须填写' },
-                { max: 100, message: '不能超过100个字符' }
+                {required: true, message: '编号必须填写'},
+                {max: 100, message: '不能超过100个字符'}
               ]
             },
             tableItem: {
@@ -123,7 +123,7 @@ export default {
             tableItem: {
               component: {
                 name: FlowStatus,
-                key:'status'
+                key: 'status'
               },
               width: 80
             }
@@ -134,7 +134,7 @@ export default {
             key: 'memo',
             formItem: {
               rules: [
-                { max: 1024, message: '不能超过1024个字符' }
+                {max: 1024, message: '不能超过1024个字符'}
               ],
               component: {
                 name: 'el-input',
@@ -156,7 +156,7 @@ export default {
             },
             {
               text: '复制流程',
-              type:'success',
+              type: 'success',
               size: "small",
               emit: "OpenCopyFlow"
             }
@@ -166,35 +166,28 @@ export default {
       pagination: {},
       customEvents: {
         // 打开编辑器
-        OpenEditFlowDialog: ({index,row}) => {
-          if(row.config&&row.config!==''){
-            this.rowData=JSON.parse(row.config)
-          }else{
-            this.rowData={}
-          }
-          this.RowData = row
-          // this.rowData=JSON.stringify(row)
+        OpenEditFlowDialog: ({index, row}) => {
+          this.$store.commit("workflow/editor/saveRowData",row)
           this.editorDialogVisible = true
-          this.$store.commit("workflow/editor/saveRowData",{
+          this.$store.dispatch("workflow/editor/saveFlowData", {
             row
           })
         },
-        OpenCopyFlow:({index,row})=>{
+        OpenCopyFlow: ({index, row}) => {
           this.copyRow = row
           this.CopyVisible = true
         }
       },
       editorDialogVisible: false,
-      FormListData:[],
-      data:[],
+      FormListData: [],
+      data: [],
       pageData: PageHelper.create(),
-      CopyVisible:false,
-      RowData:{}
+      CopyVisible: false,
     }
   },
   methods: {
-    Change(currentPage){
-      this.pageData.currentPage=currentPage
+    Change(currentPage) {
+      this.pageData.currentPage = currentPage
       this.QueryFlow()
     },
     /**
@@ -204,76 +197,76 @@ export default {
      * @param done 完成
      */
 
-   async handleDelete ({ index, row }, done) {
-      const res= await deleteFlow(row.record_id)
-      if(res&&!res.error){
+    async handleDelete({index, row}, done) {
+      const res = await deleteFlow(row.record_id)
+      if (res && !res.error) {
         this.$message.success("删除成功")
         await this.QueryFlow()
       }
       done()
     },
-   async handleAdd ( row , resolve) {
+    async handleAdd(row, resolve) {
       const res = await createFlow(row)
-     if(res&&!res.error){
-       this.$message.success("添加成功")
-       resolve()
-      await this.QueryFlow()
-     }
+      if (res && !res.error) {
+        this.$message.success("添加成功")
+        resolve()
+        await this.QueryFlow()
+      }
 
     },
-    async handleUpdate ({ index, row }, resolve) {
+    async handleUpdate({index, row}, resolve) {
       const res = await updateFlow({
-        recordId:row.record_id,
-        data:row
+        recordId: row.record_id,
+        data: row
       })
-      if(res&&!res.error){
+      if (res && !res.error) {
         this.$message.success("更新成功")
         resolve()
       }
     },
-    handleDialogClose () {
+    handleDialogClose() {
       this.editorDialogVisible = false
     },
-    handleCopyClose(){
-     this.CopyVisible = false
+    handleCopyClose() {
+      this.CopyVisible = false
     },
-   async QueryFormList () {
-      const res = await QueryFormList({q:'list'})
-     if(res&&!res.error){
-       const data = res.list.map(item=>{
-         return {
-           label:item.name,
-           value:item.record_id,
-           key:item.record_id
-         }
-       })
-      this.tableProps.columns[2].formItem.component.options = data
-     }
-   },
-    async QuerySystemList(){
-      const res = await QueryList({q:'list'})
-      if(res&&!res.error){
-        const data = res.list.map(item=>{
+    async QueryFormList() {
+      const res = await QueryFormList({q: 'list'})
+      if (res && !res.error) {
+        const data = res.list.map(item => {
           return {
-            label:item.name,
-            value:item.record_id,
-            key:item.record_id
+            label: item.name,
+            value: item.record_id,
+            key: item.record_id
+          }
+        })
+        this.tableProps.columns[2].formItem.component.options = data
+      }
+    },
+    async QuerySystemList() {
+      const res = await QueryList({q: 'list'})
+      if (res && !res.error) {
+        const data = res.list.map(item => {
+          return {
+            label: item.name,
+            value: item.record_id,
+            key: item.record_id
           }
         })
         this.tableProps.columns[0].formItem.component.options = data
       }
     },
-    async QueryFlow () {
+    async QueryFlow() {
       const res = await queryPageFlow({pageData: this.pageData})
-      if(res&&!res.error){
+      if (res && !res.error) {
         this.pageData = res
-        const pagination={
+        const pagination = {
           currentPage: res.currentPage,
-          pageSize:res.pageSize,
+          pageSize: res.pageSize,
           total: res.total
         }
         this.pagination = pagination
-        this.data=[...res.list]
+        this.data = [...res.list]
       }
     }
   },

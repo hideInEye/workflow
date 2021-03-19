@@ -6,7 +6,7 @@
     :center="true"
     @close="handleClose"
   >
-    <flow-editor :data="RowData" ref="editor" :height="600" />
+    <flow-editor  ref="editor" :height="600" />
     <span slot="footer" class="dialog-footer">
         <el-button @click="handleClose">取 消</el-button>
         <el-button type="primary" @click="SaveFlowData">确 定</el-button>
@@ -17,10 +17,12 @@
 <script>
 import FlowEditor from '../../../components/flow-editor/index'
 import {UpdateFlowEdit} from "@/api/biz.flow";
+import { mapState } from 'vuex'
 export default {
   // 流程编辑器模态框
   name: 'FlowEditorDialog',
   components: { FlowEditor },
+
   methods: {
     handleClose () {
       this.$emit('onClose')
@@ -30,7 +32,7 @@ export default {
       const data = {
         config:this.$refs.editor.save()
       }
-      const  res = await UpdateFlowEdit(this.row_data.record_id,data)
+      const  res = await UpdateFlowEdit(this.row.record_id,data)
       if(res&&!res.error){
         this.$message.success("绘制完成")
         this.$emit("onClose")
@@ -45,18 +47,11 @@ export default {
       required: true,
       default: false
     },
-    RowData:{
-      default:()=>{
-        return {}
-      },
-      type:Object
-    },
-    row_data:{
-      type:Object,
-      default:false
-}
   },
   computed: {
+    ...mapState('workflow/editor', {
+      row:state=>state.rowData
+    }),
     mVisible: {
       get () {
         return this.visible
@@ -67,7 +62,7 @@ export default {
     }
   },
   mounted() {
-
+  console.log('组件渲染')
   }
 }
 </script>

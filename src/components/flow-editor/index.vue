@@ -18,9 +18,11 @@ import registerShape from './shapes'
 import registerBehavior from './behavior'
 import AddNodePanel from './AddNodePanel'
 import NodeConfigPanel from './NodeConfigPanel'
+import { mapState } from 'vuex'
 
 registerShape(G6)
 registerBehavior(G6)
+
 export default {
   components: { NodeConfigPanel, AddNodePanel, ToolBarPanel },
   data () {
@@ -35,18 +37,53 @@ export default {
       type: Number,
       default: 800
     },
-    data: {
-      default:()=>{
-        return {}
-      },
-      type:Object
-    },
     mode: {
       type: String,
       default: 'edit'
     }
   },
+  computed: {
+    ...mapState('workflow/editor', {
+      ModuleData:state=>state.rowData,
+    })
+  },
   methods: {
+    renderG6(){
+      let plugins = []
+      this.cmdPlugin = new Command()
+      const toolBar = new ToolBar({ container: this.$refs['toolbar'].$el })
+      const itemPanel = new AddItemPanel({ container: this.$refs['addItemPanel'].$el })
+      const canvasPanel = new CanvasPanel({ container: this.$refs['canvas'] })
+      plugins = [this.cmdPlugin, toolBar, itemPanel, canvasPanel]
+      const width = this.$refs['canvas'].offsetWidth
+
+      this.graph = new G6.Graph({
+        plugins,
+        container: this.$refs['canvas'],
+        height: this.height,
+        width,
+        modes: {
+          default: ['drag-canvas', 'clickSelected'],
+          view: [ ],
+          edit: ['drag-canvas', 'hoverNodeActived', 'hoverAnchorActived', 'dragNode', 'dragEdge',
+            'dragPanelItemAddNode', 'clickSelected', 'deleteItem', 'itemAlign']
+        },
+        defaultEdge: {
+          shape: 'flow-polyline-round'
+        }
+      })
+      this.graph.setMode(this.mode)
+      let Data ={}
+      if(this.ModuleData&&this.ModuleData.config&&this.ModuleData.config!==''){
+        Data =JSON.parse(this.ModuleData.config)
+      }
+      console.log(this.ModuleData)
+      console.log(Data)
+      this.graph.data(this.initShape(Data))
+      this.graph.render()
+      this.initEvents()
+      this.$store.commit('workflow/editor/setGraph', this.graph)
+    },
     save () {
       return this.graph.save()
     },
@@ -63,6 +100,13 @@ export default {
         }
       }
       return data
+    },
+    Des(){
+      console.log('111')
+      window.removeEventListener('resize', this.resizeFunc)
+      this.graph.getNodes().forEach(node => {
+        node.getKeyShape().stopAnimate()
+      })
     },
     initEvents () {
       this.graph.on('afteritemselected', (items) => {
@@ -109,44 +153,8 @@ export default {
     })
   },
   mounted () {
-    let plugins = []
-    this.cmdPlugin = new Command()
-    const toolBar = new ToolBar({ container: this.$refs['toolbar'].$el })
-    const itemPanel = new AddItemPanel({ container: this.$refs['addItemPanel'].$el })
-    const canvasPanel = new CanvasPanel({ container: this.$refs['canvas'] })
-    plugins = [this.cmdPlugin, toolBar, itemPanel, canvasPanel]
-    const width = this.$refs['canvas'].offsetWidth
-
-    this.graph = new G6.Graph({
-      plugins,
-      container: this.$refs['canvas'],
-      height: this.height,
-      width,
-      modes: {
-        default: ['drag-canvas', 'clickSelected'],
-        view: [ ],
-        edit: ['drag-canvas', 'hoverNodeActived', 'hoverAnchorActived', 'dragNode', 'dragEdge',
-          'dragPanelItemAddNode', 'clickSelected', 'deleteItem', 'itemAlign']
-      },
-      defaultEdge: {
-        shape: 'flow-polyline-round'
-      }
-    })
-    this.graph.setMode(this.mode)
-    // let data
-    // if(this.data){
-    //    data =JSON.parse(this.data)
-    // }
-    // let NewData ={}
-    // if(data.config&&data.config!==''){
-    //   NewData = data.config
-    // }
-    // this.graph.data(this.initShape(NewData))
-    this.graph.data(this.initShape(this.data))
-    this.graph.render()
-    this.initEvents()
-    this.$store.commit('workflow/editor/setGraph', this.graph)
-  }
+    this.renderG6()
+  },
 }
 </script>
 

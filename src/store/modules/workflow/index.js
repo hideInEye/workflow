@@ -12,5 +12,14 @@ files.keys().forEach(key => {
 
 export default {
   namespaced: true,
-  modules
+  modules,
+  state:{
+
+  },
+  actions:{
+
+  },
+  mutations:{
+
+  }
 }

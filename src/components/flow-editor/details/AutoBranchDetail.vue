@@ -9,7 +9,7 @@
         数据字段:
         <el-select size="small"  :style="{width: '40%', marginLeft: '10px'}" value="" v-model="field" placeholder="请选择字段">
           <el-option
-            v-for="item in data"
+            v-for="item in flowData"
             :key="item.record_id"
             :label="item.value"
             :value="item"
@@ -27,7 +27,6 @@
 import DefaultDetail from './DefaultDetail'
 import BranchCondition from './components/BranchCondition'
 import { mapState } from 'vuex'
-import {QuerySystemList} from "@/api/biz.flow";
 export default {
   // 条件分支节点配置
   name: 'AutoBranchDetail',
@@ -45,8 +44,7 @@ export default {
   },
   computed: {
     ...mapState('workflow/editor', {
-      flow: state => state.flow,
-      row:state=>state.row
+      flowData:state=>state.flowData
     })
   },
   methods: {
@@ -65,16 +63,7 @@ export default {
       }
       this.onChange('config', { field: this.field, conditions: this.conditions })
     },
-   async QuerySyList(){
-      const params ={
-        q:'list',
-        form_id:this.row.form_id
-      }
-      const res=await QuerySystemList(params)
-        if(res&&!res.error){
-          this.data  = res.list
-        }
-    }
+
   },
   props: {
     model: {
@@ -87,7 +76,7 @@ export default {
     }
   },
   mounted() {
-    this.QuerySyList()
+    console.log(this.flowData)
   }
 }
 </script>
