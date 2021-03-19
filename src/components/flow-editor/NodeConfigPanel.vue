@@ -14,19 +14,21 @@ import DraftNodeDetail from './details/DraftNodeDetail'
 import ApproveNodeDetail from './details/ApproveNodeDetail'
 import FlowDetail from './details/FlowDetail'
 import AutoBranchDetail from './details/AutoBranchDetail'
+import {mapState} from 'vuex'
 export default {
   name: 'NodeConfigPanel',
   components: { AutoBranchDetail, FlowDetail, ApproveNodeDetail, DraftNodeDetail, StartEventDetail },
   props: {
-    model: {
-      type: Object,
-      default: () => ({})
-    },
     onChange: {
       type: Function,
       default: () => {}
     }
-  }
+  },
+  computed: {
+    ...mapState('workflow/editor', {
+      model:state=>state.selectedModel,
+    })
+  },
 }
 </script>
 

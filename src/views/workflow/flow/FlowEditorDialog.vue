@@ -29,6 +29,7 @@ export default {
     },
     // 保存数据
     async  SaveFlowData () {
+      console.log(this.$refs.editor.save(),'保存数据')
       const data = {
         config:this.$refs.editor.save()
       }
@@ -62,7 +63,7 @@ export default {
     }
   },
   mounted() {
-  console.log('组件渲染')
+
   }
 }
 </script>

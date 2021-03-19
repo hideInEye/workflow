@@ -7,7 +7,9 @@ export default {
     graph: null,
     flowData: [],
     // 行数据
-    rowData:{}
+    rowData:{},
+    // G6保存数据
+    selectedModel:{}
   },
   mutations: {
     /**
@@ -31,9 +33,10 @@ export default {
       state.flowData = row
     },
     saveRowData(state,row){
-      console.log(row,'modules')
      state.rowData=row
-
+    },
+    saveRender(state,row){
+      state.selectedModel=row
     }
   },
   actions: {

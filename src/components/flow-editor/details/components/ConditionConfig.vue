@@ -59,6 +59,7 @@ export default {
   watch: {
     config: {
       handler (value) {
+        console.log(value)
         this.condition = value.condition
         this.value = value.value
       }

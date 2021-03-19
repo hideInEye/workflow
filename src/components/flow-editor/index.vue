@@ -4,32 +4,31 @@
     <div class="main">
       <add-node-panel ref="addItemPanel"/>
       <div ref="canvas" class="canvas"></div>
-      <node-config-panel :model="selectedModel" :onChange="(key,val)=>{onItemCfgChange(key,val)}"/>
+      <node-config-panel :onChange="(key,val)=>{onItemCfgChange(key,val)}"/>
     </div>
   </div>
 </template>
 
 <script>
 import util from '@/libs/util'
-import { Command, ToolBar, AddItemPanel, CanvasPanel } from './plugins'
+import {Command, ToolBar, AddItemPanel, CanvasPanel} from './plugins'
 import G6 from '@antv/g6/src'
 import ToolBarPanel from './ToolBarPanel'
 import registerShape from './shapes'
 import registerBehavior from './behavior'
 import AddNodePanel from './AddNodePanel'
 import NodeConfigPanel from './NodeConfigPanel'
-import { mapState } from 'vuex'
+import {mapState} from 'vuex'
 
 registerShape(G6)
 registerBehavior(G6)
 
 export default {
-  components: { NodeConfigPanel, AddNodePanel, ToolBarPanel },
-  data () {
+  components: {NodeConfigPanel, AddNodePanel, ToolBarPanel},
+  data() {
     return {
       cmdPlugin: null,
       graph: null,
-      selectedModel: {},
     }
   },
   props: {
@@ -44,16 +43,16 @@ export default {
   },
   computed: {
     ...mapState('workflow/editor', {
-      ModuleData:state=>state.rowData,
+      ModuleData: state => state.rowData,
     })
   },
   methods: {
-    renderG6(){
+    renderG6() {
       let plugins = []
       this.cmdPlugin = new Command()
-      const toolBar = new ToolBar({ container: this.$refs['toolbar'].$el })
-      const itemPanel = new AddItemPanel({ container: this.$refs['addItemPanel'].$el })
-      const canvasPanel = new CanvasPanel({ container: this.$refs['canvas'] })
+      const toolBar = new ToolBar({container: this.$refs['toolbar'].$el})
+      const itemPanel = new AddItemPanel({container: this.$refs['addItemPanel'].$el})
+      const canvasPanel = new CanvasPanel({container: this.$refs['canvas']})
       plugins = [this.cmdPlugin, toolBar, itemPanel, canvasPanel]
       const width = this.$refs['canvas'].offsetWidth
 
@@ -64,7 +63,7 @@ export default {
         width,
         modes: {
           default: ['drag-canvas', 'clickSelected'],
-          view: [ ],
+          view: [],
           edit: ['drag-canvas', 'hoverNodeActived', 'hoverAnchorActived', 'dragNode', 'dragEdge',
             'dragPanelItemAddNode', 'clickSelected', 'deleteItem', 'itemAlign']
         },
@@ -73,21 +72,19 @@ export default {
         }
       })
       this.graph.setMode(this.mode)
-      let Data ={}
-      if(this.ModuleData&&this.ModuleData.config&&this.ModuleData.config!==''){
-        Data =JSON.parse(this.ModuleData.config)
+      let Data = {}
+      if (this.ModuleData && this.ModuleData.config && this.ModuleData.config !== '') {
+        Data = JSON.parse(this.ModuleData.config)
       }
-      console.log(this.ModuleData)
-      console.log(Data)
       this.graph.data(this.initShape(Data))
       this.graph.render()
       this.initEvents()
       this.$store.commit('workflow/editor/setGraph', this.graph)
     },
-    save () {
+    save() {
       return this.graph.save()
     },
-    initShape (data) {
+    initShape(data) {
       if (data && data.nodes) {
         return {
           nodes: data.nodes.map(node => {
@@ -101,21 +98,18 @@ export default {
       }
       return data
     },
-    Des(){
-      console.log('111')
-      window.removeEventListener('resize', this.resizeFunc)
-      this.graph.getNodes().forEach(node => {
-        node.getKeyShape().stopAnimate()
-      })
-    },
-    initEvents () {
+    initEvents() {
       this.graph.on('afteritemselected', (items) => {
+        let selectedModel
         if (items && items.length > 0) {
+
           const item = this.graph.findById(items[0])
-          this.selectedModel = { ...item.getModel(), item, graph: this.graph }
+          selectedModel = {...item.getModel(), item, graph: this.graph}
+
         } else {
-          this.selectedModel = { ...this.processModel }
+          selectedModel = {...this.processModel}
         }
+        this.$store.commit("workflow/editor/saveRender", selectedModel)
       })
       const page = this.$refs['canvas']
       const graph = this.graph
@@ -125,50 +119,56 @@ export default {
       }
       window.addEventListener('resize', this.resizeFunc)
     },
-    onItemCfgChange (key, value) {
-      const items = this.graph.get('selectedItems')
-      if (items && items.length > 0) {
-        const item = this.graph.findById(items[0])
-        if (this.graph.executeCommand) {
-          this.graph.executeCommand('update', {
-            itemId: items[0],
-            updateModel: { [key]: value }
-          })
+    onItemCfgChange(key, value) {
+      if (this.graph) {
+        const items = this.graph.get('selectedItems')
+        let selectedModel = {}
+        if (items && items.length > 0) {
+          const item = this.graph.findById(items[0])
+          if (this.graph.executeCommand) {
+            this.graph.executeCommand('update', {
+              itemId: items[0],
+              updateModel: {[key]: value}
+            })
+          } else {
+            this.graph.updateItem(item, {[key]: value})
+          }
+          selectedModel = {...item.getModel(), item, graph: this.graph}
         } else {
-          this.graph.updateItem(item, { [key]: value })
+          const canvasModel = {...this.processModel, [key]: value}
+          selectedModel = canvasModel
+          this.processModel = canvasModel
         }
-        this.selectedModel = { ...item.getModel(), item, graph: this.graph }
-      } else {
-        const canvasModel = { ...this.processModel, [key]: value }
-        this.selectedModel = canvasModel
-        this.processModel = canvasModel
+        this.$store.commit("workflow/editor/saveRender", selectedModel)
+        console.log(selectedModel)
       }
-      // console.log(this.selectedModel)
     }
   },
-  destroyed () {
+  destroyed() {
     window.removeEventListener('resize', this.resizeFunc)
     this.graph.getNodes().forEach(node => {
       node.getKeyShape().stopAnimate()
     })
   },
-  mounted () {
+  mounted() {
     this.renderG6()
   },
 }
 </script>
 
 <style lang="scss">
-  .root {
-    width: 100%;
-    height: 100%;
-    .main {
-      display: flex;
-      .canvas {
-        width: 70%;
-        background: #fff;
-        border-bottom: 1px solid #E9E9E9;
-      }
+.root {
+  width: 100%;
+  height: 100%;
+
+  .main {
+    display: flex;
+
+    .canvas {
+      width: 70%;
+      background: #fff;
+      border-bottom: 1px solid #E9E9E9;
     }
   }
+}
 </style>

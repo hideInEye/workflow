@@ -76,7 +76,7 @@ export default {
     }
   },
   mounted() {
-    console.log(this.flowData)
+
   }
 }
 </script>
