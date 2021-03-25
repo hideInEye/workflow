@@ -13,7 +13,7 @@
       </el-tag>
     </div>
     <el-button size="small" @click="selectUserModalVisible = true">添加</el-button>
-    <user-selector :visible="selectUserModalVisible" @onClose="handleSelectUser"/>
+    <user-selector  :selectUsers="users" :visible="selectUserModalVisible" @onClose="handleSelectUser"/>
   </div>
 </template>
 
@@ -37,11 +37,8 @@ export default {
       this.users.splice(index, 1)
     },
     // 关闭用户选择框处理
-    handleSelectUser (users) {
-      console.log(users)
-      if(users&&users.length>0){
-        this.users = users
-      }
+    handleSelectUser (e) {
+        this.users = e
       this.selectUserModalVisible = false
       this.$emit('onChangeUser', this.users)
     }

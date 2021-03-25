@@ -5,8 +5,9 @@
     :close="handlerClose"
     :before-close="handlerClose"
     :append-to-body="true"
-    >
-    <el-select style="width: 100%" v-model="users" filterable multiple :filter-method="QueryLikeName" >
+  >
+    <el-select style="width: 100%" @change="handleChange" v-model="users" clearable filterable multiple
+               :filter-method="QueryLikeName" @remove-tag="handleRemove">
       <el-option v-for="item in data" :label="item.name" :value="item.user_id" :key="item.user_id"></el-option>
     </el-select>
     <span slot="footer" class="dialog-footer">
@@ -22,33 +23,42 @@ import {QueryUserList} from "@/api/biz.flow";
 export default {
   // 选择用户控件
   name: 'UserSelector',
-  data () {
+  data() {
     return {
       // 原始用户数据
       data: [],
+      userData: [],
       // 当前选中的用户
-      users: this.selectUsers || []
+      users: []
     }
   },
   methods: {
-    handlerClose () {
-      this.$emit('onClose', this.users)
+    handleRemove(e) {
+      const Data = this.userData.filter(item => item.user_id !== e && item)
+      this.userData = Data
     },
-   async QueryUserListData(params){
+    handleChange(e) {
+      const Data = this.data.filter(item => item.user_id === e[e.length - 1] && item)
+      this.userData = this.userData.concat(Data)
+    },
+    handlerClose() {
+      this.$emit('onClose', this.userData)
+    },
+    async QueryUserListData(params) {
       const res = await QueryUserList(params)
-     if(res&&!res.error){
-       this.data=res.list
-     }
+      if (res && !res.error) {
+        this.data = res.list
+      }
     },
-    async QueryLikeName (e) {
+    async QueryLikeName(e) {
       const res = await QueryUserList({
-        q:'page',
-        current:1,
-        pageSize:10,
-        name:e
+        q: 'page',
+        current: 1,
+        pageSize: 10,
+        name: e
       })
-      if(res&&!res.error){
-        this.data=res.list
+      if (res && !res.error) {
+        this.data = res.list
       }
     }
   },
@@ -66,21 +76,28 @@ export default {
   },
   computed: {
     mVisible: {
-      get () {
+      get() {
         return this.visible
       },
-      set (value) {
+      set(value) {
         this.$emit('update:visible', value)
       }
     }
   },
   mounted() {
-    const params ={
-      q:'page',
-      current:1,
-      pageSize:10
+    const params = {
+      q: 'page',
+      current: 1,
+      pageSize: 10
     }
     this.QueryUserListData(params)
+  },
+  watch: {
+    selectUsers(val) {
+      const data = val.map(item => item.user_id)
+      this.users = data
+      this.userData = val
+    }
   }
 }
 </script>
