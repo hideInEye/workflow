@@ -9,7 +9,9 @@ export default {
     // 行数据
     rowData:{},
     // G6保存数据
-    selectedModel:{}
+    selectedModel:{
+
+    }
   },
   mutations: {
     /**

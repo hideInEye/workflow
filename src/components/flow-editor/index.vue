@@ -140,7 +140,7 @@ export default {
           this.processModel = canvasModel
         }
         this.$store.commit("workflow/editor/saveRender", selectedModel)
-        console.log(selectedModel)
+        console.log(selectedModel,'值发生变化')
       }
     }
   },

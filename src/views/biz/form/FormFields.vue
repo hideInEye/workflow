@@ -117,11 +117,6 @@ export default {
   mounted () {
 
   },
-  watch:{
-    value(oldValue,NewValue){
-      console.log(oldValue,NewValue)
-    }
-  }
 }
 </script>
 

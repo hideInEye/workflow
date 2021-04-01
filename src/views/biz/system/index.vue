@@ -65,8 +65,6 @@ export default {
       resolve()
     },
     async handleUpdate ({ index, row }, resolve) {
-      // this.$message.success('保存已成功')
-      // console.log(row)
       const res = await update(
         {
           recordId: row.record_id,

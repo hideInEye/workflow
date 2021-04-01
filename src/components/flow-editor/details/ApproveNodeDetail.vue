@@ -130,13 +130,6 @@ export default {
       default: () => {}
     }
   },
-  watch: {
-    doLimit: {
-      handler (value) {
-        console.log(value)
-      }
-    }
-  },
   methods: {
     // 处理默认处理人
     handleChangeTodoUser (value) {
@@ -145,6 +138,17 @@ export default {
     // 处理转办人
     handleChangeNextDoUser (value) {
       this.onChange('config', { next_users: value })
+    }
+  },
+  mounted() {
+    if(this.approveType){
+      this.onChange('config', { approve_type: this.approveType })
+    }
+    if(this.timeout){
+      this.onChange('config', { timeout: this.timeout })
+    }
+    if(this.process_dynamic){
+      this.onChange('config', { process_dynamic: this.process_dynamic })
     }
   }
 }

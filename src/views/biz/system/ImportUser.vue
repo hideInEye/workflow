@@ -57,12 +57,6 @@ export default {
     handleClose () {
       this.$emit('onClose')
     },
-    /**
-     * 导入用户
-     */
-    importUser () {
-    console.log(this.value)
-    },
     // 上一页
     prePage () {
       this.currentPage--
