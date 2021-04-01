@@ -25,6 +25,15 @@ export function queryPageFlow ({ pageData }) {
   })
 }
 
+export function queryPageFlows (params){
+  return request({
+    url:'/web/v1/flows',
+    method:"GET",
+    data:params
+  })
+}
+
+
 /**
  * 更新
  * @param recordId 编辑记录ID

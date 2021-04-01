@@ -1,6 +1,28 @@
 <template>
   <div>
     <d2-container>
+      <el-form :inline="true" label-width="100px" ref="form" :model="formData">
+        <el-row>
+          <el-col :span="5">
+              <el-form-item  label="流程名称查询">
+                <el-input v-model="formData.name" ></el-input>
+              </el-form-item>
+          </el-col>
+          <el-col :span="5">
+            <el-form-item label="流程编码查询">
+              <el-input v-model="formData.code" ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="4">
+            <el-button type="primary" @click="Query">
+              查询
+            </el-button>
+            <el-button @click="reset">
+              重置
+            </el-button>
+          </el-col>
+        </el-row>
+      </el-form>
       <data-table
         :options="tableProps"
         @onDelete="handleDelete"
@@ -24,7 +46,7 @@ import FlowStatus from './FlowStatus'
 import FlowEditorDialog from './FlowEditorDialog'
 import {QueryFormList} from "@/api/biz.form";
 import {QueryList} from "@/api/biz.system";
-import {queryPageFlow, createFlow, updateFlow, deleteFlow} from "@/api/biz.flow";
+import {queryPageFlow, createFlow, updateFlow, deleteFlow, queryPageFlows} from "@/api/biz.flow";
 import PageHelper from "@/libs/pageHelper";
 import CopyFlow from "@/views/workflow/flow/CopyFlow";
 
@@ -33,6 +55,7 @@ export default {
   components: {FlowEditorDialog, DataTable, CopyFlow},
   data() {
     return {
+      formData:{},
       tableProps: {
         columns: [
           {
@@ -186,6 +209,29 @@ export default {
     }
   },
   methods: {
+    reset(){
+      this.formData={}
+      this.QueryFlow()
+    },
+    async Query (){
+      const params={
+        ...this.formData,
+        current:this.pageData.pageNum,
+        pageSize:this.pageData.pageSize,
+        q:'page'
+      }
+      const res =await queryPageFlows(params)
+      if(res&&!res.error){
+        const pagination = {
+          currentPage: res.currentPage,
+          pageSize: res.pageSize,
+          total: res.total
+        }
+        this.pagination = pagination
+        this.data = [...res.list]
+      }
+    } ,
+
     Change(currentPage) {
       this.pageData.currentPage = currentPage
       this.QueryFlow()
@@ -259,7 +305,6 @@ export default {
     async QueryFlow() {
       const res = await queryPageFlow({pageData: this.pageData})
       if (res && !res.error) {
-        this.pageData = res
         const pagination = {
           currentPage: res.currentPage,
           pageSize: res.pageSize,
