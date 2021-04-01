@@ -70,18 +70,18 @@ export default {
   data () {
     return {
       // 是否允许协同
-      allow_teamwork: (this.model.config && this.model.config.allow_teamwork) || 2,
+      allow_teamwork: (this.model.config && this.model.config.allow_teamwork) || 1,
       // 默认处理人
       todo_users: (this.model.config && this.model.config.todo_users) || [],
       // 转办处理人
       next_users: (this.model.config && this.model.config.next_users) || [],
       // 超时处理
-      timeout: this.model.config && this.model.config.timeout,
+      timeout: this.model.config && this.model.config.timeout||5,
       // 审批类型
-      approveType: (this.model.config && this.model.config.approve_type) || 2,
+      approveType: (this.model.config && this.model.config.approve_type) || 1,
       // 操作时限
       doLimit: this.model.config && this.model.config.do_limit,
-      process_dynamic:this.model.config&&this.model.config.process_dynamic,
+      process_dynamic:this.model.config&&this.model.config.process_dynamic||2,
       options: [
         {
           label: '自动跳过',

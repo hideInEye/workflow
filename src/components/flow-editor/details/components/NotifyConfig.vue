@@ -14,7 +14,7 @@ export default {
   name: 'NotifyConfig',
   data () {
     return {
-      notify: (this.model.config && this.model.config.notify) || []
+      notify: (this.model.config && this.model.config.notify) || 1
     }
   },
   props: {

@@ -36,7 +36,7 @@ export default {
       const  res = await UpdateFlowEdit(this.row.record_id,data)
       if(res&&!res.error){
         this.$message.success("绘制完成")
-        this.$emit("onClose")
+        await this.$emit("onClose")
       }else{
         this.$message.error("绘制失败")
       }
